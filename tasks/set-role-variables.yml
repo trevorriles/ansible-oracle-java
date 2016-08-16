@@ -32,15 +32,10 @@
 # version-specific variables
 #
 
-- name: set internal vars for 1.8.0_92
+- name: set internal vars for 1.8.0_92 or 1.8.0_91
   set_fact:
     jdk_version_detail: "{{ java_version }}u{{ java_subversion }}-b14"
-  when: java_version == 8 and java_subversion == 92
-
-- name: set internal vars for 1.8.0_91
-  set_fact:
-    jdk_version_detail: "{{ java_version }}u{{ java_subversion }}-b14"
-  when: java_version == 8 and java_subversion == 91
+  when: java_version == 8 and (java_subversion == 92 or java_subversion == 91)
 
 - name: set internal vars for 1.8.0_77
   set_fact:
@@ -121,10 +116,17 @@
 # JCE variables
 #
 
-- name: set JCE variables
+- name: set JCE variables for java 7
+  set_fact:
+    jce_zip_file:   "UnlimitedJCEPolicyJDK{{ java_version }}.zip"
+    jce_zip_folder: "UnlimitedJCEPolicy"
+  when: java_version == 7
+
+- name: set JCE variables for java 8
   set_fact:
     jce_zip_file:   "jce_policy-{{ java_version }}.zip"
     jce_zip_folder: "UnlimitedJCEPolicyJDK{{ java_version }}"
+  when: java_version == 8
 
 - name: set JCE download file
   set_fact:
